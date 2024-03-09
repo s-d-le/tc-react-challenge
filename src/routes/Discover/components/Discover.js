@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DiscoverBlock from "./DiscoverBlock/components/DiscoverBlock";
 import "../styles/_discover.scss";
+import config from "../../../config";
 import { useAuth } from "../../../hooks/useAuth";
 
 const Discover = () => {
@@ -10,36 +11,31 @@ const Discover = () => {
   const [playlists, setPlaylists] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    console.log("token", token);
-  }, [token]);
-
   const fetchData = async () => {
     const headers = new Headers({
       "Content-Type": "application/json",
-      Authorization: `Bearer ${config.api.clientSecret}`,
+      Authorization: `Bearer ${token}`,
     });
-    const newReleasesResponse = await fetch(
-      `${config.api.baseUrl}/new-releases`,
-      { headers }
-    );
-    const playlistsResponse = await fetch(
-      `${config.api.baseUrl}/featured-playlists`,
-      { headers }
-    );
-    const categoriesResponse = await fetch(`${config.api.baseUrl}/categories`, {
+
+    await fetch(`${config.api.baseUrl}/browse/new-releases`, { headers })
+      .then((response) => response.json())
+      .then((data) => setNewReleases(data.albums.items));
+
+    await fetch(`${config.api.baseUrl}/browse/featured-playlists`, { headers })
+      .then((response) => response.json())
+      .then((data) => setPlaylists(data.playlists.items));
+
+    await fetch(`${config.api.baseUrl}/browse/categories`, {
       headers,
-    });
-    const newReleasesData = await newReleasesResponse.json();
-    const playlistsData = await playlistsResponse.json();
-    const categoriesData = await categoriesResponse.json();
-    this.setState({
-      newReleases: newReleasesData.albums.items,
-      playlists: playlistsData.playlists.items,
-      categories: categoriesData.categories.items,
-      isLoading: false,
-    });
+    })
+      .then((response) => response.json())
+      // .then((data) => console.log(data.categories.items));
+      .then((data) => setCategories(data.categories.items));
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [token]);
 
   return (
     <div className="discover">
@@ -49,7 +45,14 @@ const Discover = () => {
         data={newReleases}
       />
       <DiscoverBlock text="FEATURED PLAYLISTS" id="featured" data={playlists} />
-      <DiscoverBlock text="BROWSE" id="browse" data={categories} />
+      <DiscoverBlock
+        text="BROWSE"
+        id="browse"
+        data={categories.map((category) => ({
+          images: category.icons,
+          name: category.name,
+        }))}
+      />
     </div>
   );
 };
