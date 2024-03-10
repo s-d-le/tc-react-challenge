@@ -1,6 +1,6 @@
-@import '~animate.css/animate.min.css';
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap');
-@import './vars';
+@import "~animate.css/animate.min.css";
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
+@import "./vars";
 
 * {
   box-sizing: border-box;
@@ -12,12 +12,12 @@ h1,
 h2,
 h3,
 button {
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 
 body {
   margin: 0;
-  background: #F9F8FF;
+  background: #f9f8ff;
 }
 
 html,
@@ -54,5 +54,51 @@ body,
         padding: 20px;
       }
     }
+  }
+}
+
+@keyframes skeleton-animation {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  background-color: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateX(-100%);
+    z-index: 1;
+    animation: skeleton-animation 1.2s infinite;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0)
+    );
+  }
+
+  &--rectangle {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 20px;
+  }
+
+  &--body {
+    width: 160px;
+    height: 20px;
   }
 }

@@ -29,12 +29,11 @@ const Discover = () => {
       headers,
     })
       .then((response) => response.json())
-      // .then((data) => console.log(data.categories.items));
       .then((data) => setCategories(data.categories.items));
   };
 
   useEffect(() => {
-    fetchData();
+    if (token) fetchData();
   }, [token]);
 
   return (
@@ -43,8 +42,14 @@ const Discover = () => {
         text="RELEASED THIS WEEK"
         id="released"
         data={newReleases}
+        isLoading={!newReleases}
       />
-      <DiscoverBlock text="FEATURED PLAYLISTS" id="featured" data={playlists} />
+      <DiscoverBlock
+        text="FEATURED PLAYLISTS"
+        id="featured"
+        data={playlists}
+        isLoading={!playlists}
+      />
       <DiscoverBlock
         text="BROWSE"
         id="browse"
@@ -52,6 +57,7 @@ const Discover = () => {
           images: category.icons,
           name: category.name,
         }))}
+        isLoading={!categories}
       />
     </div>
   );
