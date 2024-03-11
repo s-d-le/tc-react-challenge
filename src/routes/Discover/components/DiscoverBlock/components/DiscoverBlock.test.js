@@ -16,4 +16,14 @@ describe("DiscoverBlock", () => {
     const skeletonItems = screen.getAllByTestId("skeleton-item");
     expect(skeletonItems.length).toBe(10);
   });
+
+  test("renders the DiscoverItem components when data is not empty", () => {
+    const data = [
+      { images: ["image1.jpg", "image2.jpg"], name: "Item 1" },
+      { images: ["image3.jpg", "image4.jpg"], name: "Item 2" },
+    ];
+    render(<DiscoverBlock text="Discover" id="discover-block" data={data} />);
+    const discoverItems = screen.getAllByTestId("discover-item");
+    expect(discoverItems.length).toBe(data.length);
+  });
 });
